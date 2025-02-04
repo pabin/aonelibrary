@@ -23,7 +23,6 @@ public class SystemController implements ControllerInterface {
             throw new LoginException("Password incorrect");
         }
         currentAuth = map.get(id).getAuthorization();
-
     }
 
     @Override
@@ -43,8 +42,6 @@ public class SystemController implements ControllerInterface {
     }
 
 
-
-
     @Override
     public void addMember(LibraryMember member) {
         DataAccess da = new DataAccessFacade();
@@ -57,5 +54,8 @@ public class SystemController implements ControllerInterface {
         return members.stream().anyMatch(m -> m.getTelephone().equals(phone));
     }
 
-
+    @Override
+    public void logout() {
+        SystemController.currentAuth = null;
+    }
 }
