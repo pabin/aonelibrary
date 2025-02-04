@@ -26,7 +26,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     JPanel mainPanel;
     JMenuBar menuBar;
     JMenu options;
-    JMenuItem login, allBookIds, allMemberIds,addMember, addBookCopy, addNewBook;
+    JMenuItem login, allBookIds, allMemberIds,addMember,searchMember, addBookCopy, addNewBook;
     String pathToImage;
     private boolean isInitialized = false;
 
@@ -34,7 +34,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
             LibrarySystem.INSTANCE,
             LoginWindow.INSTANCE,
             AllMemberIdsWindow.INSTANCE,
-            AllBookIdsWindow.INSTANCE
+            AllBookIdsWindow.INSTANCE,
+            SearchMemberWindow.INSTANCE,
+            AddMemberWindow.INSTANCE
     };
 
     public static void hideAllWindows() {
@@ -95,6 +97,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
         addMember = new JMenuItem("Add Member");
         addMember.addActionListener(new AddMemberListener());
 
+        searchMember =  new JMenuItem("Search Member");
+        searchMember.addActionListener(new SearchMemberListener());
+
         addBookCopy = new JMenuItem("Add Book Copy");
         addBookCopy.addActionListener(new AddBookCopyListener());
 
@@ -105,7 +110,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
         options.add(allBookIds);
         options.add(allMemberIds);
         options.add(addMember);
+        options.add(searchMember);
         options.add(addBookCopy);
+
         options.add(addNewBook);
     }
 
@@ -182,6 +189,16 @@ public class LibrarySystem extends JFrame implements LibWindow {
             AddMemberWindow.INSTANCE.init();
             AddMemberWindow.INSTANCE.pack();
             AddMemberWindow.INSTANCE.setVisible(true);
+        }
+    }
+
+    class SearchMemberListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            SearchMemberWindow.INSTANCE.init();
+            SearchMemberWindow.INSTANCE.pack();
+            SearchMemberWindow.INSTANCE.setVisible(true);
         }
     }
 
