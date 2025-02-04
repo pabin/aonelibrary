@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 
 import business.ControllerInterface;
 import business.SystemController;
+import dataaccess.Auth;
 
 public class LibrarySystem extends JFrame implements LibWindow {
     ControllerInterface ci = new SystemController();
@@ -101,7 +102,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
             ci.logout();
 
             LibrarySystem.hideAllWindows();
-//            LoginWindow.INSTANCE.init();
+            // LoginWindow.INSTANCE.init();
             Util.centerFrameOnDesktop(LoginWindow.INSTANCE);
             LoginWindow.INSTANCE.setVisible(true);
         }
@@ -157,9 +158,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
         JButton button = new JButton(text);
         button.addActionListener(listener);
         button.setPreferredSize(new Dimension(180, 48));
-//        button.setMargin(new Insets(60, 60, 60, 60));
-//        button.setBorder(new EmptyBorder(20, 50, 20, 50));
-
         buttonPanel.add(button);
     }
 
@@ -197,7 +195,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
         }
     }
 
-    class AddMemberListener implements ActionListener {
+    static class AddMemberListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             LibrarySystem.hideAllWindows();
             AddMemberWindow.INSTANCE.init();
@@ -206,21 +204,31 @@ public class LibrarySystem extends JFrame implements LibWindow {
         }
     }
 
-    class AddBookCopyListener implements ActionListener {
+    static class AddBookCopyListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            LibrarySystem.hideAllWindows();
-            BookCopyWindow.INSTANCE.init();
-            Util.centerFrameOnDesktop(BookCopyWindow.INSTANCE);
-            BookCopyWindow.INSTANCE.setVisible(true);
+
+            if (SystemController.currentAuth == Auth.LIBRARIAN) {
+                JOptionPane.showMessageDialog(INSTANCE, "Permission denied !!!\n" + "You don't have permission to add book copy !");
+            } else {
+                LibrarySystem.hideAllWindows();
+                BookCopyWindow.INSTANCE.init();
+                Util.centerFrameOnDesktop(BookCopyWindow.INSTANCE);
+                BookCopyWindow.INSTANCE.setVisible(true);
+            }
+
         }
     }
 
-    class AddNewBookListener implements ActionListener {
+    static class AddNewBookListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            LibrarySystem.hideAllWindows();
-            AddNewBookWindow.INSTANCE.init();
-            Util.centerFrameOnDesktop(AddNewBookWindow.INSTANCE);
-            AddNewBookWindow.INSTANCE.setVisible(true);
+            if (SystemController.currentAuth == Auth.LIBRARIAN) {
+                JOptionPane.showMessageDialog(INSTANCE, "Permission denied !!!\n" + "You don't have permission to add new book !");
+            } else {
+                LibrarySystem.hideAllWindows();
+                AddNewBookWindow.INSTANCE.init();
+                Util.centerFrameOnDesktop(AddNewBookWindow.INSTANCE);
+                AddNewBookWindow.INSTANCE.setVisible(true);
+            }
         }
     }
 
