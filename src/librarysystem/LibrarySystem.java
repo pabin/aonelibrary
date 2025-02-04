@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 
 import business.ControllerInterface;
 import business.SystemController;
+import librarysystem.LibrarySystem.AddBookCopyListener;
 
 
 public class LibrarySystem extends JFrame implements LibWindow {
@@ -25,7 +26,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     JPanel mainPanel;
     JMenuBar menuBar;
     JMenu options;
-    JMenuItem login, allBookIds, allMemberIds, addMembers;
+    JMenuItem login, allBookIds, allMemberIds,addMember, addBookCopy, addNewBook;
     String pathToImage;
     private boolean isInitialized = false;
 
@@ -63,8 +64,10 @@ public class LibrarySystem extends JFrame implements LibWindow {
     }
 
     private void setPathToImage() {
+        String os = System.getProperty("os.name").toLowerCase();
+
         String currDirectory = System.getProperty("user.dir");
-        pathToImage = currDirectory + "\\src\\librarysystem\\library.jpg";
+        pathToImage = currDirectory + (os.equals("win") ? "\\src\\librarysystem\\library.jpg" : "/src/librarysystem/library.jpg");
     }
 
     private void insertSplashImage() {
@@ -89,15 +92,21 @@ public class LibrarySystem extends JFrame implements LibWindow {
         allMemberIds = new JMenuItem("All Member Ids");
         allMemberIds.addActionListener(new AllMemberIdsListener());
 
+        addMember = new JMenuItem("Add Member");
+        addMember.addActionListener(new AddMemberListener());
 
-        addMembers = new JMenuItem("Add Members");
-        addMembers.addActionListener(new AddMemberListener());
+        addBookCopy = new JMenuItem("Add Book Copy");
+        addBookCopy.addActionListener(new AddBookCopyListener());
 
+        addNewBook = new JMenuItem("Add New Book");
+        addNewBook.addActionListener(new AddNewBookListener());
 
         options.add(login);
         options.add(allBookIds);
         options.add(allMemberIds);
-        options.add(addMembers);
+        options.add(addMember);
+        options.add(addBookCopy);
+        options.add(addNewBook);
     }
 
     class LoginListener implements ActionListener {
@@ -137,17 +146,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
     }
 
-    class AddMemberListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            LibrarySystem.hideAllWindows();
-            AddMemberWindow.INSTANCE.init();
-            AddMemberWindow.INSTANCE.pack();
-            AddMemberWindow.INSTANCE.setVisible(true);
-        }
-    }
-
     class AllMemberIdsListener implements ActionListener {
 
         @Override
@@ -173,10 +171,40 @@ public class LibrarySystem extends JFrame implements LibWindow {
             //AllMemberIdsWindow.INSTANCE.setSize(660,500);
             Util.centerFrameOnDesktop(AllMemberIdsWindow.INSTANCE);
             AllMemberIdsWindow.INSTANCE.setVisible(true);
-
-
         }
 
+    }
+
+    class AddMemberListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            AddMemberWindow.INSTANCE.init();
+            AddMemberWindow.INSTANCE.pack();
+            AddMemberWindow.INSTANCE.setVisible(true);
+        }
+    }
+
+    class AddBookCopyListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            BookCopyWindow.INSTANCE.init();
+            Util.centerFrameOnDesktop(BookCopyWindow.INSTANCE);
+            BookCopyWindow.INSTANCE.setVisible(true);
+            LibrarySystem.hideAllWindows();
+        }
+    }
+
+    class AddNewBookListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            AddNewBookWindow.INSTANCE.init();
+            Util.centerFrameOnDesktop(AddNewBookWindow.INSTANCE);
+            AddNewBookWindow.INSTANCE.setVisible(true);
+            LibrarySystem.hideAllWindows();
+        }
     }
 
     @Override
