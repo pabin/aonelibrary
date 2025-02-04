@@ -1,110 +1,119 @@
 package librarysystem;
 
 import business.ControllerInterface;
-import business.SystemController;
 import business.LibraryMember;
+import business.SystemController;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Optional;
 
 public class SearchMemberWindow extends JFrame implements LibWindow {
     public static final SearchMemberWindow INSTANCE = new SearchMemberWindow();
     ControllerInterface ci = new SystemController();
     private boolean isInitialized = false;
 
+    private JPanel mainPanel;
+    private JPanel topPanel;
+    private JPanel middlePanel;
+    private JPanel lowerPanel;
     private JTextField memberIdField;
-    private JButton searchButton;
     private JTable memberTable;
     private JScrollPane tableScrollPane;
-    private JPanel lowerPanel;
+    private JLabel memberInfoLabel;
 
     private SearchMemberWindow() {}
 
     public void init() {
         if (isInitialized) return;
 
-        setTitle("Search Member");
-        setSize(500, 250);
+        setSize(800, 600); // Set large default window size
+
+        mainPanel = new JPanel();
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.setLayout(new BorderLayout());
+
+        defineTopPanel();
+        defineMiddlePanel();
+        defineLowerPanel();
+
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(middlePanel, BorderLayout.CENTER);
+        mainPanel.add(lowerPanel, BorderLayout.SOUTH);
+
+        getContentPane().add(mainPanel);
+        pack();
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        isInitialized = true;
+    }
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout(10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    private void defineTopPanel() {
+        topPanel = new JPanel();
+        JLabel searchLabel = new JLabel("Search Member");
+        Util.adjustLabelFont(searchLabel, Util.DARK_BLUE, true);
+        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        topPanel.add(searchLabel);
+    }
 
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel memberIdLabel = new JLabel("Member ID:");
-        memberIdField = new JTextField(20);
-        memberIdField.setPreferredSize(new Dimension(250, 30));
-        searchButton = new JButton("Search");
+    private void defineMiddlePanel() {
+        middlePanel = new JPanel(new BorderLayout());
 
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleSearch();
-            }
-        });
+        JPanel inputPanel = new JPanel(new FlowLayout());
+        JLabel memberIdLabel = new JLabel("Enter Member ID:");
+        memberIdField = new JTextField(15);
+        JButton searchButton = new JButton("Search");
 
-        searchPanel.add(memberIdLabel);
-        searchPanel.add(memberIdField);
-        searchPanel.add(searchButton);
+        searchButton.addActionListener(evt -> handleSearch());
+
+        inputPanel.add(memberIdLabel);
+        inputPanel.add(memberIdField);
+        inputPanel.add(searchButton);
+
+        memberInfoLabel = new JLabel("No member searched yet");
+        memberInfoLabel.setFont(new Font("Arial", Font.BOLD, 11));
 
         String[] columnNames = {"Member ID", "Name", "Phone"};
-        Object[][] data = {};
-        memberTable = new JTable(data, columnNames);
-        memberTable.setEnabled(false);
+        memberTable = new JTable(new DefaultTableModel(columnNames, 0));
         tableScrollPane = new JScrollPane(memberTable);
-        tableScrollPane.setVisible(false);
 
-        panel.add(searchPanel, BorderLayout.NORTH);
-        panel.add(tableScrollPane, BorderLayout.CENTER);
+        middlePanel.add(inputPanel, BorderLayout.NORTH);
+        middlePanel.add(memberInfoLabel, BorderLayout.CENTER);
+        middlePanel.add(tableScrollPane, BorderLayout.SOUTH);
+    }
 
-        defineLowerPanel();
-        panel.add(lowerPanel, BorderLayout.SOUTH);
+    private void defineLowerPanel() {
+        lowerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton backButton = new JButton("<== Back to Main");
 
-        add(panel);
+        backButton.addActionListener(evt -> {
+            LibrarySystem.hideAllWindows();
+            LibrarySystem.INSTANCE.setVisible(true);
+        });
 
-        isInitialized = true;
+        lowerPanel.add(backButton);
     }
 
     private void handleSearch() {
         String memberId = memberIdField.getText().trim();
+
         if (memberId.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter a Member ID", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-//
-//        LibraryMember member = ci.searchMember(memberId);
-//        if (member == null) {
-//            JOptionPane.showMessageDialog(this, "Member not found", "Error", JOptionPane.ERROR_MESSAGE);
-//            tableScrollPane.setVisible(false);
-//        } else {
-//            Object[][] rowData = {{member.getMemberId(), member.getFullName(), member.getTelephone()}};
-//            String[] columnNames = {"Member ID", "Name", "Phone"};
-//            memberTable.setModel(new javax.swing.table.DefaultTableModel(rowData, columnNames));
-//            tableScrollPane.setVisible(true);
-//        }
 
-        revalidate();
-        repaint();
-    }
+        Optional<LibraryMember> member = ci.getMember(memberId);
+        if (member.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Member not found", "Error", JOptionPane.ERROR_MESSAGE);
+//            memberInfoLabel.setText("No member found");
+//            memberTable.setModel(new DefaultTableModel(new Object[][]{}, new String[]{"Member ID", "Name", "Phone"}));
+        } else {
+            LibraryMember memberObject = member.get();
+            Object[][] rowData = {{memberObject.getMemberId(), memberObject.getFirstName() + " " + memberObject.getLastName(), memberObject.getTelephone()}};
+            String[] columnNames = {"Member ID", "Name", "Phone"};
 
-    public void defineLowerPanel() {
-        JButton backToMainButn = new JButton("<= Back to Main");
-        backToMainButn.addActionListener(new BackToMainListener());
-        lowerPanel = new JPanel();
-        lowerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        lowerPanel.add(backToMainButn);
-    }
-
-    class BackToMainListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            LibrarySystem.hideAllWindows();
-            LibrarySystem.INSTANCE.setVisible(true);
-            SearchMemberWindow.INSTANCE.dispose(); // Dispose the current window
+            memberTable.setModel(new DefaultTableModel(rowData, columnNames));
+            memberInfoLabel.setText("Member Found: " + memberObject.getFirstName() + " " + memberObject.getLastName() + " (ID: " + memberObject.getMemberId() + ")");
         }
     }
 
@@ -116,5 +125,12 @@ public class SearchMemberWindow extends JFrame implements LibWindow {
     @Override
     public void isInitialized(boolean val) {
         isInitialized = val;
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            SearchMemberWindow.INSTANCE.init();
+            SearchMemberWindow.INSTANCE.setVisible(true);
+        });
     }
 }

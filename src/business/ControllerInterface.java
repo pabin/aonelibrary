@@ -1,6 +1,7 @@
 package business;
 
 import java.util.List;
+import java.util.Optional;
 
 import business.Book;
 import dataaccess.DataAccess;
@@ -12,5 +13,6 @@ public interface ControllerInterface {
 	public List<String> allBookIds();
 	void addMember(LibraryMember member);
 	public boolean checkIfMemberExists(String phone);
+	public Optional<LibraryMember> getMember(String id);
 	
 }

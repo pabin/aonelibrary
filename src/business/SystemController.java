@@ -3,6 +3,7 @@ package business;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import dataaccess.Auth;
 import dataaccess.DataAccess;
@@ -55,6 +56,12 @@ public class SystemController implements ControllerInterface {
         DataAccess da = new DataAccessFacade();
         List<LibraryMember> members = da.readMemberMap().values().stream().toList();
         return members.stream().anyMatch(m -> m.getTelephone().equals(phone));
+    }
+
+    @Override
+    public Optional<LibraryMember> getMember(String id) {
+        DataAccess da = new DataAccessFacade();
+        return da.readMemberMap().values().stream().filter(x-> x.getMemberId().equals(id)).findFirst();
     }
 
 
