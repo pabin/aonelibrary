@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 
 import business.ControllerInterface;
 import business.SystemController;
+import librarysystem.LibrarySystem.AddBookCopyListener;
 
 
 public class LibrarySystem extends JFrame implements LibWindow {
@@ -25,7 +26,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     JPanel mainPanel;
     JMenuBar menuBar;
     JMenu options;
-    JMenuItem login, allBookIds, allMemberIds, addNewBook;
+    JMenuItem login, allBookIds, allMemberIds, addBookCopy, addNewBook;
     String pathToImage;
     private boolean isInitialized = false;
 
@@ -63,8 +64,10 @@ public class LibrarySystem extends JFrame implements LibWindow {
     }
 
     private void setPathToImage() {
+        String os = System.getProperty("os.name").toLowerCase();
+
         String currDirectory = System.getProperty("user.dir");
-        pathToImage = currDirectory + "\\src\\librarysystem\\library.jpg";
+        pathToImage = currDirectory + (os.equals("win") ? "\\src\\librarysystem\\library.jpg" : "/src/librarysystem/library.jpg");
     }
 
     private void insertSplashImage() {
@@ -88,11 +91,17 @@ public class LibrarySystem extends JFrame implements LibWindow {
         allBookIds.addActionListener(new AllBookIdsListener());
         allMemberIds = new JMenuItem("All Member Ids");
         allMemberIds.addActionListener(new AllMemberIdsListener());
+
+        addBookCopy = new JMenuItem("Add Book Copy");
+        addBookCopy.addActionListener(new AddBookCopyListener());
+
         addNewBook = new JMenuItem("Add New Book");
         addNewBook.addActionListener(new AddNewBookListener());
+
         options.add(login);
         options.add(allBookIds);
         options.add(allMemberIds);
+        options.add(addBookCopy);
         options.add(addNewBook);
     }
 
@@ -158,10 +167,19 @@ public class LibrarySystem extends JFrame implements LibWindow {
             //AllMemberIdsWindow.INSTANCE.setSize(660,500);
             Util.centerFrameOnDesktop(AllMemberIdsWindow.INSTANCE);
             AllMemberIdsWindow.INSTANCE.setVisible(true);
-
-
         }
 
+    }
+
+    class AddBookCopyListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            BookCopyWindow.INSTANCE.init();
+            Util.centerFrameOnDesktop(BookCopyWindow.INSTANCE);
+            BookCopyWindow.INSTANCE.setVisible(true);
+            LibrarySystem.hideAllWindows();
+        }
     }
 
     class AddNewBookListener implements ActionListener {
