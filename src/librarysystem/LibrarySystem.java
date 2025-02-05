@@ -13,6 +13,7 @@ import business.ControllerInterface;
 import business.SystemController;
 import dataaccess.Auth;
 
+
 public class LibrarySystem extends JFrame implements LibWindow {
     ControllerInterface ci = new SystemController();
     public final static LibrarySystem INSTANCE = new LibrarySystem();
@@ -20,7 +21,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
     JLabel backgroundLabel;
     JMenuBar menuBar;
     JMenu options;
-    JMenuItem logout, help, about;
+
+    JMenuItem logout, help, about, searchMember;
+
     String pathToImage;
     private boolean isInitialized = false;
 
@@ -28,7 +31,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
             LibrarySystem.INSTANCE,
             LoginWindow.INSTANCE,
             AllMemberIdsWindow.INSTANCE,
-            AllBookIdsWindow.INSTANCE
+            AllBookIdsWindow.INSTANCE,
+            SearchMemberWindow.INSTANCE,
+            AddMemberWindow.INSTANCE
     };
 
     public static void hideAllWindows() {
@@ -86,6 +91,14 @@ public class LibrarySystem extends JFrame implements LibWindow {
         help.addActionListener(new HelpListener());
         options.add(help);
 
+
+        searchMember =  new JMenuItem("Search Member");
+        searchMember.addActionListener(new SearchMemberListener());
+
+
+        options.add(searchMember);
+
+
         about = new JMenuItem("About");
         about.addActionListener(new AboutListener());
         options.add(about);
@@ -93,6 +106,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
         logout = new JMenuItem("Logout");
         logout.addActionListener(new LogoutListener());
         options.add(logout);
+
     }
 
     static class LogoutListener implements ActionListener {
@@ -204,7 +218,20 @@ public class LibrarySystem extends JFrame implements LibWindow {
         }
     }
 
+
+    class SearchMemberListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            SearchMemberWindow.INSTANCE.init();
+            SearchMemberWindow.INSTANCE.pack();
+            SearchMemberWindow.INSTANCE.setVisible(true);
+        }
+    }
+
+
     static class AddBookCopyListener implements ActionListener {
+
         public void actionPerformed(ActionEvent e) {
 
             if (SystemController.currentAuth == Auth.LIBRARIAN) {
