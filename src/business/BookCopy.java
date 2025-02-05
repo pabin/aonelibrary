@@ -1,6 +1,6 @@
 package business;
 
-import librarysystem.CheckoutWindow;
+
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,7 +14,7 @@ final public class BookCopy implements Serializable {
 	private Book book;
 	private int copyNum;
 	private boolean isAvailable;
-	private List<CheckoutWindow> checkoutEntries;
+	private List<CheckoutEntry> checkoutEntries;
 	BookCopy(Book book, int copyNum, boolean isAvailable) {
 		this.book = book;
 		this.copyNum = copyNum;
@@ -39,11 +39,11 @@ final public class BookCopy implements Serializable {
 		return book;
 	}
 
-	public List<CheckoutWindow> getCheckoutEntries() {
+	public List<CheckoutEntry> getCheckoutEntries() {
 		return checkoutEntries;
 	}
 
-	public void setCheckoutEntries(List<CheckoutWindow> checkoutEntries) {
+	public void setCheckoutEntries(List<CheckoutEntry> checkoutEntries) {
 		this.checkoutEntries = checkoutEntries;
 	}
 

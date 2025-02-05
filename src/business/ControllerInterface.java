@@ -21,6 +21,10 @@ public interface ControllerInterface {
 
     public Optional<LibraryMember> getMember(String id);
 
+    public  List<LibraryMember> getMembers();
+
+    public List<Book> getBooks();
+
     public void logout();
 
 }

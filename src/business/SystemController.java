@@ -64,6 +64,18 @@ public class SystemController implements ControllerInterface {
     }
 
     @Override
+    public List<Book> getBooks(){
+        DataAccess da = new DataAccessFacade();
+        return da.readBooksMap().values().stream().toList();
+    }
+
+    @Override
+    public  List<LibraryMember> getMembers() {
+        DataAccess da = new DataAccessFacade();
+        return  da.readMemberMap().values().stream().toList();
+    }
+
+    @Override
     public void logout() {
         SystemController.currentAuth = null;
     }

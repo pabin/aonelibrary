@@ -1,17 +1,21 @@
 package business;
 
-public class CheckoutEntry {
+import java.io.Serializable;
+
+public class CheckoutEntry implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String id;
     private String issuedDate;
-    private String dueDate;
+    private int issuedDuration; // Added issuedDuration
     private BookCopy bookCopy;
-    private boolean isInitialized = false;
 
-    public CheckoutEntry() {}
-    public CheckoutEntry(String issuedDate, String dueDate, BookCopy bookCopy) {
+
+    public CheckoutEntry(String id, String issuedDate, int issuedDuration, BookCopy bookCopy) {
         this.issuedDate = issuedDate;
-        this.dueDate = dueDate;
+        this.issuedDuration = issuedDuration;
         this.bookCopy = bookCopy;
+        this.id = id;
     }
 
     public void setId(String id) {
@@ -19,14 +23,15 @@ public class CheckoutEntry {
     }
     public String getIssuedDate() { return issuedDate; }
     public void setIssuedDate(String issuedDate) { this.issuedDate = issuedDate; }
-    public String getDueDate() { return dueDate; }
-    public void setDueDate(String dueDate) { this.dueDate = dueDate; }
+    public int getIssuedDuration() { return issuedDuration; } // Added getter for issuedDuration
+    public void setIssuedDuration(int issuedDuration) { this.issuedDuration = issuedDuration; } // Added setter for issuedDuration
     public BookCopy getBookCopy() { return bookCopy; }
     public void setBookCopy(BookCopy bookCopy) { this.bookCopy = bookCopy; }
-
+    public String getId() {
+        return id;
+    }
     @Override
     public String toString() {
-        return "Id: " + id + " issued date: " + issuedDate + ", due date: " + dueDate;
+        return "Id: " + id + " issued date: " + issuedDate + ", issued duration: " + issuedDuration + " days";
     }
-
 }
