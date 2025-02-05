@@ -15,6 +15,8 @@ public interface ControllerInterface {
 
     void addMember(LibraryMember member);
 
+    void updateMember(LibraryMember libraryMember);
+
     public boolean checkIfMemberExists(String phone);
 
     public void logout();

@@ -1,8 +1,7 @@
 package business;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.lang.reflect.Member;
+import java.util.*;
 
 import dataaccess.Auth;
 import dataaccess.DataAccess;
@@ -46,6 +45,15 @@ public class SystemController implements ControllerInterface {
     public void addMember(LibraryMember member) {
         DataAccess da = new DataAccessFacade();
         da.saveNewMember(member);
+    }
+
+    @Override
+    public void updateMember(LibraryMember libraryMember) {
+        DataAccess da = new DataAccessFacade();
+
+        da.saveNewMember(libraryMember);
+        System.out.println(da.readMemberMap());
+
     }
 
     public boolean checkIfMemberExists(String phone) {

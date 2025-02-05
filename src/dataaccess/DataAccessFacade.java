@@ -14,6 +14,7 @@ import business.Book;
 import business.BookCopy;
 import business.LibraryMember;
 import dataaccess.DataAccessFacade.StorageType;
+import librarysystem.CheckoutEntry;
 
 
 public class DataAccessFacade implements DataAccess {
@@ -75,13 +76,13 @@ public class DataAccessFacade implements DataAccess {
         saveToStorage(StorageType.USERS, users);
     }
 
-    static void loadMemberMap(List<LibraryMember> memberList) {
+    public static void loadMemberMap(List<LibraryMember> memberList) {
         HashMap<String, LibraryMember> members = new HashMap<String, LibraryMember>();
         memberList.forEach(member -> members.put(member.getMemberId(), member));
         saveToStorage(StorageType.MEMBERS, members);
     }
 
-    static void saveToStorage(StorageType type, Object ob) {
+    public static void saveToStorage(StorageType type, Object ob) {
         ObjectOutputStream out = null;
         try {
             Path path = FileSystems.getDefault().getPath(OUTPUT_DIR, type.toString());
