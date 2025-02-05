@@ -49,6 +49,8 @@ public class SystemController implements ControllerInterface {
         da.saveNewMember(member);
     }
 
+
+
     public boolean checkIfMemberExists(String phone) {
         DataAccess da = new DataAccessFacade();
         List<LibraryMember> members = da.readMemberMap().values().stream().toList();
@@ -60,9 +62,21 @@ public class SystemController implements ControllerInterface {
         DataAccess da = new DataAccessFacade();
         return da.readMemberMap().values().stream().filter(x-> x.getMemberId().equals(id)).findFirst();
     }
-    
+
+    @Override
+    public List<Book> getBooks(){
+        DataAccess da = new DataAccessFacade();
+        return da.readBooksMap().values().stream().toList();
+    }
+
+    @Override
+    public  List<LibraryMember> getMembers() {
+        DataAccess da = new DataAccessFacade();
+        return  da.readMemberMap().values().stream().toList();
+    }
+
+    @Override
     public void logout() {
         SystemController.currentAuth = null;
     }
-
 }

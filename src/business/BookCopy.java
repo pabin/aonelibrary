@@ -1,6 +1,9 @@
 package business;
 
+
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Immutable class
@@ -11,6 +14,7 @@ final public class BookCopy implements Serializable {
 	private Book book;
 	private int copyNum;
 	private boolean isAvailable;
+	private List<CheckoutEntry> checkoutEntries;
 	BookCopy(Book book, int copyNum, boolean isAvailable) {
 		this.book = book;
 		this.copyNum = copyNum;
@@ -34,7 +38,15 @@ final public class BookCopy implements Serializable {
 	public Book getBook() {
 		return book;
 	}
-	
+
+	public List<CheckoutEntry> getCheckoutEntries() {
+		return checkoutEntries;
+	}
+
+	public void setCheckoutEntries(List<CheckoutEntry> checkoutEntries) {
+		this.checkoutEntries = checkoutEntries;
+	}
+
 	public void changeAvailability() {
 		isAvailable = !isAvailable;
 	}
