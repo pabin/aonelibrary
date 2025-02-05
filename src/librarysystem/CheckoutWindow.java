@@ -152,6 +152,7 @@ public class CheckoutWindow extends JFrame implements LibWindow {
         List<CheckoutEntry> existingCheckoutEntriesCopy = Optional.ofNullable(availableCopy.getCheckoutEntries()).orElse(new ArrayList<>());
         existingCheckoutEntriesCopy.add(entry);
         availableCopy.setCheckoutEntries(existingCheckoutEntriesCopy);
+        availableCopy.changeAvailability();
 
         DataAccessFacade.loadMemberMap(members);
         DataAccessFacade.loadBookMap(books);
