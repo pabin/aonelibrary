@@ -91,18 +91,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
         help.addActionListener(new HelpListener());
         options.add(help);
 
-
-        searchMember =  new JMenuItem("Search Member");
-        searchMember.addActionListener(new SearchMemberListener());
-
-        Checkout =  new JMenuItem("Checkout");
-        Checkout.addActionListener(new CheckoutBookListener());
-
-
-        options.add(searchMember);
-        options.add(Checkout);
-
-
         about = new JMenuItem("About");
         about.addActionListener(new AboutListener());
         options.add(about);
@@ -110,7 +98,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
         logout = new JMenuItem("Logout");
         logout.addActionListener(new LogoutListener());
         options.add(logout);
-
     }
 
     static class LogoutListener implements ActionListener {
@@ -164,11 +151,22 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
         addButton("All Book IDs", new AllBookIdsListener());
         addButton("All Member IDs", new AllMemberIdsListener());
-        addButton("Add Member", new AddMemberListener());
-        addButton("Add Book Copy", new AddBookCopyListener());
-        addButton("Add New Book", new AddNewBookListener());
-        addButton("Checkout Book", new AddNewBookListener()); // update to implement book checkout window
 
+        if (SystemController.currentAuth == Auth.ADMIN) {
+            addButton("Add Member", new AddMemberListener());
+            addButton("Add Book Copy", new AddBookCopyListener());
+            addButton("Add New Book", new AddNewBookListener());
+        } else if (SystemController.currentAuth == Auth.LIBRARIAN) {
+            addButton("Checkout Book", new CheckoutBookListener());
+            addButton("Search Member", new SearchMemberListener());
+        } else if (SystemController.currentAuth == Auth.BOTH) {
+            addButton("Add Member", new AddMemberListener());
+            addButton("Add Book Copy", new AddBookCopyListener());
+            addButton("Add New Book", new AddNewBookListener());
+            addButton("Checkout Book", new CheckoutBookListener());
+        } else {
+            JOptionPane.showMessageDialog(INSTANCE, "Permission denied !!!\n" + "Invalid User role !");
+        }
         backgroundLabel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
