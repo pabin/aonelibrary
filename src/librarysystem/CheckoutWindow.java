@@ -136,6 +136,9 @@ public class CheckoutWindow extends JFrame implements LibWindow {
             JOptionPane.showMessageDialog(this, "Book is not available at this time!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
+        // Add breakpoint here and proceed to checkout.
+
         if (book.get().getMaxCheckoutLength() < duration) {
             JOptionPane.showMessageDialog(this, "Book cannot be checked out for the provided duration!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -152,7 +155,7 @@ public class CheckoutWindow extends JFrame implements LibWindow {
         List<CheckoutEntry> existingCheckoutEntriesCopy = Optional.ofNullable(availableCopy.getCheckoutEntries()).orElse(new ArrayList<>());
         existingCheckoutEntriesCopy.add(entry);
         availableCopy.setCheckoutEntries(existingCheckoutEntriesCopy);
-        
+
         availableCopy.changeAvailability();
 
         DataAccessFacade.loadMemberMap(members);
