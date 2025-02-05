@@ -1,37 +1,28 @@
 package librarysystem;
 
-import business.Book;
-import business.BookCopy;
-import business.LibraryMember;
-import business.SystemController;
+import business.*;
 import dataaccess.DataAccessFacade;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
-public class CheckoutEntry extends JFrame implements LibWindow  {
-    public static final CheckoutEntry INSTANCE = new CheckoutEntry();
+public class CheckoutWindow extends JFrame implements LibWindow {
+    public static final CheckoutWindow INSTANCE = new CheckoutWindow();
+    ControllerInterface ci = new SystemController();
 
-    private String id;
-    private String issuedDate;
-    private String dueDate;
-    private BookCopy bookCopy;
-    private boolean isInitialized = false;
+  private boolean isInitialized = false;
 
-    public CheckoutEntry() {}
-    public CheckoutEntry(String issuedDate, String dueDate, BookCopy bookCopy) {
-        this.issuedDate = issuedDate;
-        this.dueDate = dueDate;
-        this.bookCopy = bookCopy;
-    }
+    public CheckoutWindow() {}
+
 
     public static void main(String[] args) {
-        CheckoutEntry checkoutEntry = new CheckoutEntry();
-        checkoutEntry.checkout();
+        CheckoutWindow checkoutWindow = new CheckoutWindow();
+        checkoutWindow.checkout();
     }
 
     public void checkout() {
@@ -121,8 +112,9 @@ public class CheckoutEntry extends JFrame implements LibWindow  {
                 libMember.setCheckoutEntries(list);
 
                 libraryMemberList.put(memberId, libMember);
+                DataAccessFacade.loadMemberMap(libraryMemberList.values().stream().toList());
 
-                System.out.println(libraryMemberList.get(memberId));
+                System.out.println(ci.getMember(memberId));
 
 //                for ()
 
@@ -137,21 +129,6 @@ public class CheckoutEntry extends JFrame implements LibWindow  {
         });
 
         frame.setVisible(true);
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-    public String getIssuedDate() { return issuedDate; }
-    public void setIssuedDate(String issuedDate) { this.issuedDate = issuedDate; }
-    public String getDueDate() { return dueDate; }
-    public void setDueDate(String dueDate) { this.dueDate = dueDate; }
-    public BookCopy getBookCopy() { return bookCopy; }
-    public void setBookCopy(BookCopy bookCopy) { this.bookCopy = bookCopy; }
-
-    @Override
-    public String toString() {
-        return "Id: " + id + " issued date: " + issuedDate + ", due date: " + dueDate;
     }
 
     @Override

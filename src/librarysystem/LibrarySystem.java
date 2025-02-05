@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 import business.ControllerInterface;
 import business.SystemController;
@@ -34,7 +33,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
             AllBookIdsWindow.INSTANCE,
             SearchMemberWindow.INSTANCE,
             AddMemberWindow.INSTANCE,
-            CheckoutEntry.INSTANCE
+            CheckoutWindow.INSTANCE
     };
 
     public static void hideAllWindows() {
@@ -200,9 +199,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
     class CheckoutBookListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             LibrarySystem.hideAllWindows();
-            CheckoutEntry.INSTANCE.init();
-            CheckoutEntry.INSTANCE.pack();
-            CheckoutEntry.INSTANCE.setVisible(true);
+            CheckoutWindow.INSTANCE.init();
+            CheckoutWindow.INSTANCE.pack();
+            CheckoutWindow.INSTANCE.setVisible(true);
         }
     }
 
