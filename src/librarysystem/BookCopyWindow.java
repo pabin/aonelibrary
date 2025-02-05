@@ -58,7 +58,7 @@ public class BookCopyWindow extends JFrame implements LibWindow {
         });
 
         getContentPane().add(mainPanel);
-        setSize(300, 200);
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         isInitialized = true;
     }
