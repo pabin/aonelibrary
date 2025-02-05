@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class AddMemberWindow extends JFrame implements LibWindow {
@@ -103,8 +104,9 @@ public class AddMemberWindow extends JFrame implements LibWindow {
             LibrarySystem.INSTANCE.setVisible(true);
         });
 
-        lowerPanel.add(submitButton);
+
         lowerPanel.add(backButton);
+        lowerPanel.add(submitButton);
     }
 
     private void handleSubmit() {
@@ -127,18 +129,26 @@ public class AddMemberWindow extends JFrame implements LibWindow {
         }
 
         Address add = new Address(street, city, state, zip);
-        String id = UUID.randomUUID().toString();
+        String id = generateID();
 
         LibraryMember member = new LibraryMember(id, fname, lname, tel, add);
 
         ci.addMember(member);
 
-        JOptionPane.showMessageDialog(this, "Member added successfully! ID: " + fname + " " + lname, "Success", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Member added successfully! ID: " + id , "Success", JOptionPane.INFORMATION_MESSAGE);
 
         refreshAllMemberIdsWindow();
         clearFields();
 
         dispose();
+    }
+
+
+    public static String generateID() {
+        Random random = new Random();
+        // Generate a number with 4 digits
+        // 1000 to 9999
+        return String.valueOf(random.nextInt(9000) + 1000);
     }
 
     private void refreshAllMemberIdsWindow() {

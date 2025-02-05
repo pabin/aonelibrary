@@ -153,6 +153,7 @@ public class LoginWindow extends JFrame implements LibWindow {
         lowerPanel = new JPanel();
         loginButton = new JButton("Login");
         addLoginButtonListener(loginButton);
+        loginButton.setPreferredSize(new Dimension(120, 36));
         lowerPanel.add(loginButton);
     }
 

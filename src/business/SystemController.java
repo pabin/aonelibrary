@@ -1,7 +1,9 @@
 package business;
 
-import java.lang.reflect.Member;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 import dataaccess.Auth;
 import dataaccess.DataAccess;
@@ -47,19 +49,18 @@ public class SystemController implements ControllerInterface {
         da.saveNewMember(member);
     }
 
-    @Override
-    public void updateMember(LibraryMember libraryMember) {
-        DataAccess da = new DataAccessFacade();
 
-        da.saveNewMember(libraryMember);
-        System.out.println(da.readMemberMap());
-
-    }
 
     public boolean checkIfMemberExists(String phone) {
         DataAccess da = new DataAccessFacade();
         List<LibraryMember> members = da.readMemberMap().values().stream().toList();
         return members.stream().anyMatch(m -> m.getTelephone().equals(phone));
+    }
+
+    @Override
+    public Optional<LibraryMember> getMember(String id) {
+        DataAccess da = new DataAccessFacade();
+        return da.readMemberMap().values().stream().filter(x-> x.getMemberId().equals(id)).findFirst();
     }
 
     @Override
