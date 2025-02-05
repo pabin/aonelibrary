@@ -146,7 +146,7 @@ public class CheckoutWindow extends JFrame implements LibWindow {
 
         BookCopy availableCopy = book.get().getNextAvailableCopy();
         String issuedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-        CheckoutEntry entry = new CheckoutEntry(generateID(), issuedDate, duration, availableCopy);
+        CheckoutEntry entry = new CheckoutEntry(generateID(), issuedDate, duration, availableCopy, member.get());
 
         List<CheckoutEntry> checkoutEntries = Optional.ofNullable(member.get().getCheckoutEntries()).orElse(new ArrayList<>());
         checkoutEntries.add(entry);
@@ -157,6 +157,8 @@ public class CheckoutWindow extends JFrame implements LibWindow {
         availableCopy.setCheckoutEntries(existingCheckoutEntriesCopy);
 
         availableCopy.changeAvailability();
+
+
 
         DataAccessFacade.loadMemberMap(members);
         DataAccessFacade.loadBookMap(books);

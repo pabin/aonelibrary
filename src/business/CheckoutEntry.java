@@ -18,11 +18,12 @@ public class CheckoutEntry implements Serializable {
     private LibraryMember member;
 
 
-    public CheckoutEntry(String id, String issuedDate, int issuedDuration, BookCopy bookCopy) {
+    public CheckoutEntry(String id, String issuedDate, int issuedDuration, BookCopy bookCopy, LibraryMember member) {
         this.issuedDate = issuedDate;
         this.issuedDuration = issuedDuration;
         this.bookCopy = bookCopy;
         this.id = id;
+        this.member = member;
 
 
     }
@@ -33,6 +34,10 @@ public class CheckoutEntry implements Serializable {
         LocalDate dateObj = LocalDate.parse(issuedDate, formatter);
         LocalDate newDateObj = dateObj.plusDays(issuedDuration);
         return newDateObj.format(formatter);
+    }
+
+    public LibraryMember getMember(){
+        return member;
     }
 
 
