@@ -104,8 +104,9 @@ public class AddMemberWindow extends JFrame implements LibWindow {
             LibrarySystem.INSTANCE.setVisible(true);
         });
 
-        lowerPanel.add(submitButton);
+
         lowerPanel.add(backButton);
+        lowerPanel.add(submitButton);
     }
 
     private void handleSubmit() {
