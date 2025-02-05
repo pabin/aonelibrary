@@ -98,6 +98,11 @@ public class LibrarySystem extends JFrame implements LibWindow {
         logout = new JMenuItem("Logout");
         logout.addActionListener(new LogoutListener());
         options.add(logout);
+
+        // Add text label on the right
+        JLabel rightText = new JLabel(SystemController.currentAuth.toString());
+        rightText.setForeground(Color.BLUE);  // Optional styling
+        menuBar.add(rightText, BorderLayout.CENTER);
     }
 
     static class LogoutListener implements ActionListener {
@@ -152,18 +157,24 @@ public class LibrarySystem extends JFrame implements LibWindow {
         addButton("All Book IDs", new AllBookIdsListener());
         addButton("All Member IDs", new AllMemberIdsListener());
 
+        AddMemberListener addMemberListner = new AddMemberListener();
+        AddBookCopyListener addBookCopyListener = new AddBookCopyListener();
+        CheckoutBookListener checkoutListener = new CheckoutBookListener();
+        AddNewBookListener addBookListener = new AddNewBookListener();
+        SearchMemberListener searchMemListener = new SearchMemberListener();
+
         if (SystemController.currentAuth == Auth.ADMIN) {
-            addButton("Add Member", new AddMemberListener());
-            addButton("Add Book Copy", new AddBookCopyListener());
-            addButton("Add New Book", new AddNewBookListener());
+            addButton("Add Member", addMemberListner);
+            addButton("Add Book Copy", addBookCopyListener);
+            addButton("Add New Book", addBookListener);
         } else if (SystemController.currentAuth == Auth.LIBRARIAN) {
-            addButton("Checkout Book", new CheckoutBookListener());
-            addButton("Search Member", new SearchMemberListener());
+            addButton("Checkout Book", checkoutListener);
+            addButton("Search Member", searchMemListener);
         } else if (SystemController.currentAuth == Auth.BOTH) {
-            addButton("Add Member", new AddMemberListener());
-            addButton("Add Book Copy", new AddBookCopyListener());
-            addButton("Add New Book", new AddNewBookListener());
-            addButton("Checkout Book", new CheckoutBookListener());
+            addButton("Add Member", addMemberListner);
+            addButton("Add Book Copy", addBookCopyListener);
+            addButton("Add New Book", addBookListener);
+            addButton("Checkout Book", checkoutListener);
         } else {
             JOptionPane.showMessageDialog(INSTANCE, "Permission denied !!!\n" + "Invalid User role !");
         }
@@ -244,29 +255,19 @@ public class LibrarySystem extends JFrame implements LibWindow {
     static class AddBookCopyListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-
-            if (SystemController.currentAuth == Auth.LIBRARIAN) {
-                JOptionPane.showMessageDialog(INSTANCE, "Permission denied !!!\n" + "You don't have permission to add book copy !");
-            } else {
-                LibrarySystem.hideAllWindows();
-                BookCopyWindow.INSTANCE.init();
-                Util.centerFrameOnDesktop(BookCopyWindow.INSTANCE);
-                BookCopyWindow.INSTANCE.setVisible(true);
-            }
-
+            LibrarySystem.hideAllWindows();
+            BookCopyWindow.INSTANCE.init();
+            Util.centerFrameOnDesktop(BookCopyWindow.INSTANCE);
+            BookCopyWindow.INSTANCE.setVisible(true);
         }
     }
 
     static class AddNewBookListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            if (SystemController.currentAuth == Auth.LIBRARIAN) {
-                JOptionPane.showMessageDialog(INSTANCE, "Permission denied !!!\n" + "You don't have permission to add new book !");
-            } else {
-                LibrarySystem.hideAllWindows();
-                AddNewBookWindow.INSTANCE.init();
-                Util.centerFrameOnDesktop(AddNewBookWindow.INSTANCE);
-                AddNewBookWindow.INSTANCE.setVisible(true);
-            }
+            LibrarySystem.hideAllWindows();
+            AddNewBookWindow.INSTANCE.init();
+            Util.centerFrameOnDesktop(AddNewBookWindow.INSTANCE);
+            AddNewBookWindow.INSTANCE.setVisible(true);
         }
     }
 
