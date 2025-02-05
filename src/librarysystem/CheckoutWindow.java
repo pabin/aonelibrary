@@ -82,7 +82,7 @@ public class CheckoutWindow extends JFrame implements LibWindow {
     }
 
     private void defineTablePanel(JPanel mainPanel) {
-        String[] columnNames = {"Member ID", "ISBN", "Checkout Date", "Duration"};
+        String[] columnNames = {"Member ID", "ISBN", "Checkout Date", "Due Date"};
         Object[][] data = {};
         checkoutTable = new JTable(new javax.swing.table.DefaultTableModel(data, columnNames));
         tableScrollPane = new JScrollPane(checkoutTable);
@@ -152,19 +152,20 @@ public class CheckoutWindow extends JFrame implements LibWindow {
         List<CheckoutEntry> existingCheckoutEntriesCopy = Optional.ofNullable(availableCopy.getCheckoutEntries()).orElse(new ArrayList<>());
         existingCheckoutEntriesCopy.add(entry);
         availableCopy.setCheckoutEntries(existingCheckoutEntriesCopy);
+        
         availableCopy.changeAvailability();
 
         DataAccessFacade.loadMemberMap(members);
         DataAccessFacade.loadBookMap(books);
 
         JOptionPane.showMessageDialog(this, "Checkout successful! Member ID: " + memberId + " | ISBN: " + isbn, "Success", JOptionPane.INFORMATION_MESSAGE);
-        updateTable(memberId, isbn, issuedDate, duration);
+        updateTable(memberId, isbn, issuedDate, entry.getDueDate());
         clearFields();
     }
 
-    private void updateTable(String memberId, String isbn, String issuedDate, int duration) {
-        Object[][] newData = {{memberId, isbn, issuedDate, duration}};
-        checkoutTable.setModel(new javax.swing.table.DefaultTableModel(newData, new String[]{"Member ID", "ISBN", "Checkout Date", "Duration"}));
+    private void updateTable(String memberId, String isbn, String issuedDate, String dueDate) {
+        Object[][] newData = {{memberId, isbn, issuedDate, dueDate}};
+        checkoutTable.setModel(new javax.swing.table.DefaultTableModel(newData, new String[]{"Member ID", "ISBN", "Checkout Date", "Due Date"}));
         tableScrollPane.setVisible(true);
         SwingUtilities.updateComponentTreeUI(this);
     }

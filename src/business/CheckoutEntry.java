@@ -1,14 +1,21 @@
 package business;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 
 public class CheckoutEntry implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String id;
     private String issuedDate;
-    private int issuedDuration; // Added issuedDuration
+    private int issuedDuration;
+    private String dueDate;
     private BookCopy bookCopy;
+    private LibraryMember member;
 
 
     public CheckoutEntry(String id, String issuedDate, int issuedDuration, BookCopy bookCopy) {
@@ -16,11 +23,20 @@ public class CheckoutEntry implements Serializable {
         this.issuedDuration = issuedDuration;
         this.bookCopy = bookCopy;
         this.id = id;
+
+
     }
 
-    public void setId(String id) {
-        this.id = id;
+
+    public String getDueDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate dateObj = LocalDate.parse(issuedDate, formatter);
+        LocalDate newDateObj = dateObj.plusDays(issuedDuration);
+        return newDateObj.format(formatter);
     }
+
+
+
     public String getIssuedDate() { return issuedDate; }
     public void setIssuedDate(String issuedDate) { this.issuedDate = issuedDate; }
     public int getIssuedDuration() { return issuedDuration; } // Added getter for issuedDuration
