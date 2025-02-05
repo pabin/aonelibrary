@@ -32,8 +32,12 @@ public class CheckoutWindow extends JFrame implements LibWindow {
         setTitle("Checkout Book");
         setSize(800, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+
+        // Title Label at the top of the window
+        JLabel windowTitleLabel = new JLabel("Checkout Book", SwingConstants.CENTER);
+        windowTitleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        add(windowTitleLabel, BorderLayout.NORTH);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -45,8 +49,14 @@ public class CheckoutWindow extends JFrame implements LibWindow {
 
         getContentPane().add(mainPanel);
         defineBackButtonPanel(); // Added to define the back button panel
+
+        // Ensure the window opens at the center of the screen
+        setLocationRelativeTo(null);
+
         isInitialized = true;
     }
+
+
 
     private void defineTopPanel(JPanel mainPanel) {
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -95,12 +105,18 @@ public class CheckoutWindow extends JFrame implements LibWindow {
         mainPanel.add(tablePanel, BorderLayout.CENTER);
     }
 
+    private void clearTable() {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) checkoutTable.getModel();
+        model.setRowCount(0); // Clears all rows
+    }
+
     private void defineBackButtonPanel() {
         JPanel backButtonPanel = new JPanel();
         JButton backButton = new JButton("<== Back to Main");
 
         backButton.addActionListener(evt -> {
             clearFields();
+            clearTable();
             LibrarySystem.hideAllWindows();
             LibrarySystem.INSTANCE.setVisible(true);
         });
@@ -168,12 +184,12 @@ public class CheckoutWindow extends JFrame implements LibWindow {
         clearFields();
     }
 
+
     private void updateTable(String memberId, String isbn, String issuedDate, String dueDate) {
-        Object[][] newData = {{memberId, isbn, issuedDate, dueDate}};
-        checkoutTable.setModel(new javax.swing.table.DefaultTableModel(newData, new String[]{"Member ID", "ISBN", "Checkout Date", "Due Date"}));
-        tableScrollPane.setVisible(true);
-        SwingUtilities.updateComponentTreeUI(this);
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) checkoutTable.getModel();
+        model.addRow(new Object[]{memberId, isbn, issuedDate, dueDate});
     }
+
 
     public static String generateID() {
         Random random = new Random();
