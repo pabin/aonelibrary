@@ -13,11 +13,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
-public class CheckoutEntry {
+public class CheckoutEntry extends JFrame implements LibWindow  {
+    public static final CheckoutEntry INSTANCE = new CheckoutEntry();
+
     private String id;
     private String issuedDate;
     private String dueDate;
     private BookCopy bookCopy;
+    private boolean isInitialized = false;
 
     public CheckoutEntry() {}
     public CheckoutEntry(String issuedDate, String dueDate, BookCopy bookCopy) {
@@ -149,5 +152,20 @@ public class CheckoutEntry {
     @Override
     public String toString() {
         return "Id: " + id + " issued date: " + issuedDate + ", due date: " + dueDate;
+    }
+
+    @Override
+    public void init() {
+        checkout();
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return isInitialized;
+    }
+
+    @Override
+    public void isInitialized(boolean val) {
+
     }
 }

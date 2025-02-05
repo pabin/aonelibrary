@@ -22,7 +22,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     JMenuBar menuBar;
     JMenu options;
 
-    JMenuItem logout, help, about, searchMember;
+    JMenuItem logout, help, about, searchMember, Checkout;
 
     String pathToImage;
     private boolean isInitialized = false;
@@ -33,7 +33,8 @@ public class LibrarySystem extends JFrame implements LibWindow {
             AllMemberIdsWindow.INSTANCE,
             AllBookIdsWindow.INSTANCE,
             SearchMemberWindow.INSTANCE,
-            AddMemberWindow.INSTANCE
+            AddMemberWindow.INSTANCE,
+            CheckoutEntry.INSTANCE
     };
 
     public static void hideAllWindows() {
@@ -95,8 +96,12 @@ public class LibrarySystem extends JFrame implements LibWindow {
         searchMember =  new JMenuItem("Search Member");
         searchMember.addActionListener(new SearchMemberListener());
 
+        Checkout =  new JMenuItem("Checkout");
+        Checkout.addActionListener(new CheckoutBookListener());
+
 
         options.add(searchMember);
+        options.add(Checkout);
 
 
         about = new JMenuItem("About");
@@ -189,6 +194,15 @@ public class LibrarySystem extends JFrame implements LibWindow {
             AllBookIdsWindow.INSTANCE.pack();
             Util.centerFrameOnDesktop(AllBookIdsWindow.INSTANCE);
             AllBookIdsWindow.INSTANCE.setVisible(true);
+        }
+    }
+
+    class CheckoutBookListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            CheckoutEntry.INSTANCE.init();
+            CheckoutEntry.INSTANCE.pack();
+            CheckoutEntry.INSTANCE.setVisible(true);
         }
     }
 
