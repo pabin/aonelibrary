@@ -17,6 +17,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
+import javax.swing.border.EmptyBorder;
 
 import business.Book;
 import business.ControllerInterface;
@@ -71,11 +72,16 @@ public class LoginWindow extends JFrame implements LibWindow {
     private LoginWindow() {
     }
 
+
+
     public void init() {
         mainPanel = new JPanel();
+        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20)); // Add padding (top, left, bottom, right)
+
         defineUpperHalf();
         defineMiddleHalf();
         defineLowerHalf();
+
         BorderLayout bl = new BorderLayout();
         bl.setVgap(30);
         mainPanel.setLayout(bl);
@@ -90,8 +96,8 @@ public class LoginWindow extends JFrame implements LibWindow {
         getContentPane().add(mainPanel);
         isInitialized(true);
         pack();
-        //setSize(660, 500);
     }
+
 
     private void defineUpperHalf() {
 
@@ -127,6 +133,8 @@ public class LoginWindow extends JFrame implements LibWindow {
 
     }
 
+
+
     private void defineTopPanel() {
         topPanel = new JPanel();
         JPanel intPanel = new JPanel(new BorderLayout());
@@ -136,6 +144,10 @@ public class LoginWindow extends JFrame implements LibWindow {
         intPanel.add(loginLabel, BorderLayout.CENTER);
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         topPanel.add(intPanel);
+
+        
+
+
 
     }
 
