@@ -161,8 +161,12 @@ public class LibrarySystem extends JFrame implements LibWindow {
     }
 
     private void createButtons() {
+        JPanel containerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Center align the button panel
+        containerPanel.setOpaque(false); // Make it transparent to blend with the background
+        containerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add padding around
+
         buttonPanel = new JPanel(new GridLayout(3, 2, 16, 16));
-        buttonPanel.setOpaque(false); // Make panel transparent
+        buttonPanel.setOpaque(false); // Transparent background
 
         addButton("All Book IDs", new AllBookIdsListener());
         addButton("All Member IDs", new AllMemberIdsListener());
@@ -192,8 +196,11 @@ public class LibrarySystem extends JFrame implements LibWindow {
         } else {
             JOptionPane.showMessageDialog(INSTANCE, "Permission denied !!!\n" + "Invalid User role !");
         }
-        backgroundLabel.add(buttonPanel, BorderLayout.SOUTH);
+
+        containerPanel.add(buttonPanel); // Add buttonPanel inside the padded container
+        backgroundLabel.add(containerPanel, BorderLayout.SOUTH);
     }
+
 
     private void addButton(String text, ActionListener listener) {
         JButton button = new JButton(text);
