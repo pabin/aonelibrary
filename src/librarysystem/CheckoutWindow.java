@@ -32,12 +32,8 @@ public class CheckoutWindow extends JFrame implements LibWindow {
         setTitle("Checkout Book");
         setSize(800, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null); // Center the window on the screen
         setLayout(new BorderLayout());
-
-        // Title Label at the top of the window
-        JLabel windowTitleLabel = new JLabel("Checkout Book", SwingConstants.CENTER);
-        windowTitleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        add(windowTitleLabel, BorderLayout.NORTH);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -49,14 +45,8 @@ public class CheckoutWindow extends JFrame implements LibWindow {
 
         getContentPane().add(mainPanel);
         defineBackButtonPanel(); // Added to define the back button panel
-
-        // Ensure the window opens at the center of the screen
-        setLocationRelativeTo(null);
-
         isInitialized = true;
     }
-
-
 
     private void defineTopPanel(JPanel mainPanel) {
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -105,18 +95,13 @@ public class CheckoutWindow extends JFrame implements LibWindow {
         mainPanel.add(tablePanel, BorderLayout.CENTER);
     }
 
-    private void clearTable() {
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) checkoutTable.getModel();
-        model.setRowCount(0); // Clears all rows
-    }
-
     private void defineBackButtonPanel() {
         JPanel backButtonPanel = new JPanel();
         JButton backButton = new JButton("<== Back to Main");
 
         backButton.addActionListener(evt -> {
             clearFields();
-            clearTable();
+            clearTable(); // Clear table when clicking the back button
             LibrarySystem.hideAllWindows();
             LibrarySystem.INSTANCE.setVisible(true);
         });
@@ -148,53 +133,44 @@ public class CheckoutWindow extends JFrame implements LibWindow {
             JOptionPane.showMessageDialog(this, "Member does not exist in the system!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!book.get().isAvailable()) {
+
+        BookCopy availableCopy = book.get().getNextAvailableCopy();
+        if (!book.get().isAvailable() || availableCopy == null) {
             JOptionPane.showMessageDialog(this, "Book is not available at this time!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        // Add breakpoint here and proceed to checkout.
-
         if (book.get().getMaxCheckoutLength() < duration) {
             JOptionPane.showMessageDialog(this, "Book cannot be checked out for the provided duration!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        BookCopy availableCopy = book.get().getNextAvailableCopy();
+
         String issuedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
         CheckoutEntry entry = new CheckoutEntry(generateID(), issuedDate, duration, availableCopy, member.get());
-
-        List<CheckoutEntry> checkoutEntries = Optional.ofNullable(member.get().getCheckoutEntries()).orElse(new ArrayList<>());
-        checkoutEntries.add(entry);
-
-        member.get().setCheckoutEntries(checkoutEntries);
-        List<CheckoutEntry> existingCheckoutEntriesCopy = Optional.ofNullable(availableCopy.getCheckoutEntries()).orElse(new ArrayList<>());
-        existingCheckoutEntriesCopy.add(entry);
-        availableCopy.setCheckoutEntries(existingCheckoutEntriesCopy);
-
+        List<CheckoutEntry> entries = new ArrayList<>(ci.getCheckOutEntries());
+        entries.add(entry);
         availableCopy.changeAvailability();
 
-
-
-        DataAccessFacade.loadMemberMap(members);
-        DataAccessFacade.loadBookMap(books);
+        DataAccessFacade.loadEntryRecordsMap(entries);
 
         JOptionPane.showMessageDialog(this, "Checkout successful! Member ID: " + memberId + " | ISBN: " + isbn, "Success", JOptionPane.INFORMATION_MESSAGE);
         updateTable(memberId, isbn, issuedDate, entry.getDueDate());
         clearFields();
     }
 
-
     private void updateTable(String memberId, String isbn, String issuedDate, String dueDate) {
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) checkoutTable.getModel();
-        model.addRow(new Object[]{memberId, isbn, issuedDate, dueDate});
+        Object[][] newData = {{memberId, isbn, issuedDate, dueDate}};
+        checkoutTable.setModel(new javax.swing.table.DefaultTableModel(newData, new String[]{"Member ID", "ISBN", "Checkout Date", "Checkout Date"}));
+        tableScrollPane.setVisible(true);
+        SwingUtilities.updateComponentTreeUI(this);
     }
 
+    private void clearTable() {
+        checkoutTable.setModel(new javax.swing.table.DefaultTableModel(new Object[][]{}, new String[]{"Member ID", "ISBN", "Checkout Date", "Due Date"}));
+    }
 
     public static String generateID() {
         Random random = new Random();
-        // Generate a number with 4 digits
-        // 1000 to 9999
         return String.valueOf(random.nextInt(9000) + 1000);
     }
 

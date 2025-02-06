@@ -72,7 +72,7 @@ public class SearchBookWindow extends JFrame implements LibWindow {
     }
 
     private void defineTablePanel(JPanel mainPanel) {
-        String[] columnNames = {"Member ID", "ISBN", "Checkout Date", "Due Date", "isOverdue"};
+        String[] columnNames = {"ISBN", "Title", "Copy No", "Library Member", "Due Date", "Is Overdue"};
         Object[][] data = {};
         searchTable = new JTable(new javax.swing.table.DefaultTableModel(data, columnNames));
         tableScrollPane = new JScrollPane(searchTable);
@@ -118,59 +118,51 @@ public class SearchBookWindow extends JFrame implements LibWindow {
             return;
         }
 
-        List<BookCopy> bookCopies = Arrays.stream(book.get().getCopies()).toList();
+        List<CheckoutEntry> entries = ci.getMemberCheckoutRecordForBook(isbn);
 
-        if (bookCopies.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No Book Copy Records for the provided Book!", "Error", JOptionPane.ERROR_MESSAGE);
+        if (entries.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No Checkout Records for a Book!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        updateTable(bookCopies);
+        updateTable(entries);
     }
 
-    private void updateTable(List<BookCopy> bookCopies) {
-        Object[][] data = new Object[bookCopies.size()][7];
+    private void updateTable(List<CheckoutEntry> entries) {
+        Object[][] data = new Object[entries.size()][7];
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        for (int i = 0; i < bookCopies.size(); i++) {
 
-
-            BookCopy copy = bookCopies.get(i);
-
-            data[i][0] = copy.getBook().getIsbn();
-            data[i][1] = copy.getBook().getTitle();
-            data[i][2] = copy.getCopyNum();
-            data[i][3] = copy.isAvailable() ? "Yes" : "No";
-
-            if (!copy.isAvailable()) {
-                CheckoutEntry entry = copy.getCheckoutEntries().getFirst();
+            for (int i = 0; i < entries.size(); i++) {
+                CheckoutEntry entry = entries.get(i);
                 LocalDate dueDate = LocalDate.parse(entry.getDueDate(), formatter);
                 boolean isOverdue = LocalDate.now().isAfter(dueDate);
-                data[i][4] = Optional.ofNullable(entry.getMember().getMemberId()).orElse("");
-                data[i][5] = Optional.ofNullable(entry.getDueDate()).orElse("");
-                data[i][6] = isOverdue ? "Yes" : "No";
+                data[i][0] = entry.getBookCopy().getBook().getIsbn();
+                data[i][1] = entry.getBookCopy().getBook().getTitle();
+                data[i][2] = entry.getBookCopy().getCopyNum();
+                data[i][3] = entry.getMember().getMemberId();
+                data[i][4] = entry.getDueDate();
+                data[i][5] = isOverdue;
             }
-
+            searchTable.setModel(new javax.swing.table.DefaultTableModel(data, new String[]{"ISBN", "Title", "Copy No", "Library Member", "Due Date", "Is Overdue"}));
+            tableScrollPane.setVisible(true);
+            SwingUtilities.updateComponentTreeUI(this);
         }
-        searchTable.setModel(new javax.swing.table.DefaultTableModel(data, new String[]{"ISBN", "Title", "Copy No", "Is Available", "Library Member", "Due Date", "isOverdue"}));
-        tableScrollPane.setVisible(true);
-        SwingUtilities.updateComponentTreeUI(this);
-    }
 
-    private void clearTable() {
-        searchTable.setModel(new javax.swing.table.DefaultTableModel(new Object[][]{}, new String[]{"Member ID", "ISBN", "Checkout Date", "Due Date", "isOverdue"}));
-    }
+        private void clearTable () {
+            searchTable.setModel(new javax.swing.table.DefaultTableModel(new Object[][]{}, new String[]{"ISBN", "Title", "Copy No", "Library Member", "Due Date", "Is Overdue"}));
+        }
 
-    private void clearFields() {
-        isbnField.setText("");
-    }
+        private void clearFields () {
+            isbnField.setText("");
+        }
 
-    @Override
-    public boolean isInitialized() {
-        return isInitialized;
-    }
+        @Override
+        public boolean isInitialized () {
+            return isInitialized;
+        }
 
-    @Override
-    public void isInitialized(boolean val) {
-        isInitialized = val;
+        @Override
+        public void isInitialized ( boolean val){
+            isInitialized = val;
+        }
     }
-}

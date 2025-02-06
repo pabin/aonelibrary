@@ -25,6 +25,12 @@ public interface ControllerInterface {
 
     public List<Book> getBooks();
 
+    public List<CheckoutEntry> getCheckOutEntries();
+
+    public List<CheckoutEntry> getMemberCheckoutRecordForMember(String memberID);
+
+    public List<CheckoutEntry> getMemberCheckoutRecordForBook(String ISBN);
+
     public void logout();
 
 }

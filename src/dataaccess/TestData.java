@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import business.Address;
-import business.Author;
-import business.Book;
-import business.LibraryMember;
+import business.*;
 
 /**
  * This class loads data into the data repository and also
@@ -16,17 +13,18 @@ import business.LibraryMember;
  * once) before the rest of the application can work properly.
  * It will create three serialized objects in the dataaccess.storage
  * folder.
- * 
+ *
  *
  */
 public class TestData {
-	
-	
+
+
 	public static void main(String[] args) {
 		TestData td = new TestData();
 		td.bookData();
 		td.libraryMemberData();
 		td.userData();
+		td.CheckoutEntriesData();
 		DataAccess da = new DataAccessFacade();
 		System.out.println(da.readBooksMap());
 		System.out.println(da.readUserMap());
@@ -41,25 +39,34 @@ public class TestData {
 		allBooks.get(2).addCopy();
 		DataAccessFacade.loadBookMap(allBooks);
 	}
-	
+
 	public void userData() {
 		DataAccessFacade.loadUserMap(allUsers);
 	}
-	
+
 	//create library members
 	public void libraryMemberData() {
 		LibraryMember libraryMember = new LibraryMember("1001", "Andy", "Rogers", "641-223-2211", addresses.get(4));
 		members.add(libraryMember);
 		libraryMember = new LibraryMember("1002", "Drew", "Stevens", "702-998-2414", addresses.get(5));
 		members.add(libraryMember);
-		
+
 		libraryMember = new LibraryMember("1003", "Sarah", "Eagleton", "451-234-8811", addresses.get(6));
 		members.add(libraryMember);
-		
+
 		libraryMember = new LibraryMember("1004", "Ricardo", "Montalbahn", "641-472-2871", addresses.get(7));
 		members.add(libraryMember);
-		
-		DataAccessFacade.loadMemberMap(members);	
+
+		DataAccessFacade.loadMemberMap(members);
+	}
+
+	public void CheckoutEntriesData() {
+		List<CheckoutEntry> checkoutEntries = new ArrayList<>();
+		LibraryMember member = members.getFirst();
+		Book book = allBooks.getFirst();
+		book.addCopy();
+		checkoutEntries.add(new CheckoutEntry("0001", "02/05/2025", 21, book.getNextAvailableCopy(), member));
+		DataAccessFacade.loadEntryRecordsMap(checkoutEntries);
 	}
 	
 	///////////// DATA //////////////
