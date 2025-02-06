@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import business.Book;
+import business.CheckoutEntry;
 import business.LibraryMember;
 
 
@@ -18,7 +19,7 @@ public class DataAccessFacade implements DataAccess {
     private static final String os = System.getProperty("os.name").toLowerCase();
 
     enum StorageType {
-        BOOKS, MEMBERS, USERS;
+        BOOKS, MEMBERS, USERS, CHECKOUTS;
     }
 
     public static final String OUTPUT_DIR = System.getProperty("user.dir")
@@ -56,6 +57,13 @@ public class DataAccessFacade implements DataAccess {
         return (HashMap<String, User>) readFromStorage(StorageType.USERS);
     }
 
+    public HashMap<String, CheckoutEntry> readCheckoutEntryMap() {
+        //Returns a Map with name/value pairs being
+        //   userId -> User
+        return (HashMap<String, CheckoutEntry>) readFromStorage(StorageType.CHECKOUTS);
+
+    }
+
 
     /////load methods - these place test data into the storage area
     ///// - used just once at startup
@@ -77,6 +85,12 @@ public class DataAccessFacade implements DataAccess {
         HashMap<String, LibraryMember> members = new HashMap<String, LibraryMember>();
         memberList.forEach(member -> members.put(member.getMemberId(), member));
         saveToStorage(StorageType.MEMBERS, members);
+    }
+
+    public static void loadEntryRecordsMap(List<CheckoutEntry> checkoutEntries) {
+        HashMap<String, CheckoutEntry> entries = new HashMap<String, CheckoutEntry>();
+        checkoutEntries.forEach(entry -> entries.put(entry.getId(), entry));
+        saveToStorage(StorageType.CHECKOUTS, entries);
     }
 
     public static void saveToStorage(StorageType type, Object ob) {
