@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import business.Book;
 import business.ControllerInterface;
 import business.SystemController;
 import dataaccess.Auth;
@@ -34,7 +35,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
             SearchMemberWindow.INSTANCE,
             AddMemberWindow.INSTANCE,
             CheckoutWindow.INSTANCE,
-            SearchMemberWindow.INSTANCE
+            SearchMemberWindow.INSTANCE,
+            AddNewBookWindow.INSTANCE,
+            BookCopyWindow.INSTANCE,
     };
 
     public static void hideAllWindows() {
@@ -47,7 +50,11 @@ public class LibrarySystem extends JFrame implements LibWindow {
     }
 
     public void init() {
-        if (isInitialized) return;
+        if (isInitialized) {
+            buttonPanel.removeAll();
+            buttonPanel.revalidate();
+            buttonPanel.repaint();
+        }
 
         formatContentPane();
         setPathToImage();
@@ -107,7 +114,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
         menuBar.add(rightText, BorderLayout.CENTER);
     }
 
-    static class LogoutListener implements ActionListener {
+    class LogoutListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             ControllerInterface ci = new SystemController();
