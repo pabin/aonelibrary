@@ -20,7 +20,7 @@ public class AddNewBookWindow extends JFrame implements LibWindow {
     public static final AddNewBookWindow INSTANCE = new AddNewBookWindow();
     private boolean isInitialized = false;
 
-    private JTextField isbnField, titleField, copiesField, checkoutLengthField;
+    private JTextField isbnField, titleField, copiesField;
     private JTextField afName, aSecName, aPhone, biographyField;
     private JTextField streetField, cityField, stateField, zipField;
     private JButton saveButton;
@@ -31,6 +31,11 @@ public class AddNewBookWindow extends JFrame implements LibWindow {
     }
 
     public void init() {
+        if (isInitialized) {
+            refreshUI();
+            return;
+        }
+
         setTitle("Add New Book");
         setSize(400, 600);
         setLayout(new BorderLayout());
@@ -79,7 +84,7 @@ public class AddNewBookWindow extends JFrame implements LibWindow {
         bookPanel.add(titleField);
 
         bookPanel.add(new JLabel("Max Checkout Length (in days):"));
-        String[] checkoutOptions = {"7", "14"};
+        String[] checkoutOptions = {"7", "21"};
         checkoutLengthComboBox = new JComboBox<>(checkoutOptions);
         bookPanel.add(checkoutLengthComboBox);
 
@@ -170,11 +175,7 @@ public class AddNewBookWindow extends JFrame implements LibWindow {
             List<Author> authorList = new ArrayList<>();
             authorList.add(author);
 
-            System.out.println("address: " + address);
-            System.out.println("author: " + author);
-
             Book bookItem = new Book(isbn, title, Integer.parseInt(checkoutLength), authorList);
-            System.out.println("bookItem: " + bookItem);
 
             for (int i = 1; i <= Integer.parseInt(copies); i++) {
                 bookItem.addCopy();
@@ -209,5 +210,19 @@ public class AddNewBookWindow extends JFrame implements LibWindow {
     @Override
     public void isInitialized(boolean val) {
         isInitialized = val;
+    }
+
+    private void refreshUI() {
+        isbnField.setText("");
+        titleField.setText("");
+        copiesField.setText("");
+        afName.setText("");
+        aSecName.setText("");
+        aPhone.setText("");
+        biographyField.setText("");
+        streetField.setText("");
+        cityField.setText("");
+        stateField.setText("");
+        zipField.setText("");
     }
 }
