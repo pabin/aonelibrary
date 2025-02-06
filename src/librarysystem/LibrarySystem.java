@@ -47,6 +47,8 @@ public class LibrarySystem extends JFrame implements LibWindow {
     }
 
     public void init() {
+        if (isInitialized) return;
+
         formatContentPane();
         setPathToImage();
         insertSplashImage();
@@ -83,7 +85,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
         setJMenuBar(menuBar);
     }
 
-
     private void addMenuItems() {
         options = new JMenu("Options");
         menuBar.add(options);
@@ -92,23 +93,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
         help.addActionListener(new HelpListener());
         options.add(help);
 
-
-
-        searchMember =  new JMenuItem("Search Member");
-        searchMember.addActionListener(new SearchMemberListener());
-
-        Checkout =  new JMenuItem("Checkout");
-        Checkout.addActionListener(new CheckoutBookListener());
-
-        SearchBook = new JMenuItem("Search Book");
-        SearchBook.addActionListener(new SeachBookListener());
-        options.add(SearchBook);
-
-
-        options.add(searchMember);
-        options.add(Checkout);
-
-        
         about = new JMenuItem("About");
         about.addActionListener(new AboutListener());
         options.add(about);
@@ -129,13 +113,12 @@ public class LibrarySystem extends JFrame implements LibWindow {
             ControllerInterface ci = new SystemController();
             ci.logout();
 
+            LibrarySystem.INSTANCE.dispose();
             LibrarySystem.hideAllWindows();
-            // LoginWindow.INSTANCE.init();
             Util.centerFrameOnDesktop(LoginWindow.INSTANCE);
             LoginWindow.INSTANCE.setVisible(true);
         }
     }
-
 
 
     static class HelpListener implements ActionListener {
@@ -162,7 +145,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
                     "Aone Library System is a simple, efficient solution for managing\n" + "library operations and handling checkouts seamlessly. It’s\n" + "designed for ease of use and streamlined book management.\n" +
                     "\n" +
                     "Developed by:\n" +
-                    "\t•\tAl Hassane Camara – Junior Java Intern\n" +
+                    "\t•\tAl Hassane Camara – Senior Java Developer\n" +
                     "\t•\tPabin Luitel – Senior Platform Engineer\n" +
                     "\t•\tSushil Karki – Senior Full-Stack Engineer\n" +
                     "\n" +
@@ -182,15 +165,19 @@ public class LibrarySystem extends JFrame implements LibWindow {
         CheckoutBookListener checkoutListener = new CheckoutBookListener();
         AddNewBookListener addBookListener = new AddNewBookListener();
         SearchMemberListener searchMemListener = new SearchMemberListener();
+        SeachBookListener searchBookListener = new SeachBookListener();
 
         if (SystemController.currentAuth == Auth.ADMIN) {
             addButton("Add Member", addMemberListner);
             addButton("Add Book Copy", addBookCopyListener);
             addButton("Add New Book", addBookListener);
         } else if (SystemController.currentAuth == Auth.LIBRARIAN) {
-            addButton("Checkout Book", checkoutListener);
+            addButton("Search Book", searchBookListener);
             addButton("Search Member", searchMemListener);
+            addButton("Checkout Book", checkoutListener);
         } else if (SystemController.currentAuth == Auth.BOTH) {
+            addButton("Search Book", searchBookListener);
+            addButton("Search Member", searchMemListener);
             addButton("Add Member", addMemberListner);
             addButton("Add Book Copy", addBookCopyListener);
             addButton("Add New Book", addBookListener);
@@ -244,7 +231,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
     }
 
 
-
     class AllMemberIdsListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             LibrarySystem.hideAllWindows();
@@ -284,7 +270,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
 
     static class AddBookCopyListener implements ActionListener {
-
         public void actionPerformed(ActionEvent e) {
             LibrarySystem.hideAllWindows();
             BookCopyWindow.INSTANCE.init();
