@@ -113,7 +113,7 @@ public class SearchMemberWindow extends JFrame implements LibWindow {
             return;
         }
 
-        List<CheckoutEntry> entries = Optional.ofNullable(member.get().getCheckoutEntries()).orElse(new ArrayList<>());
+        List<CheckoutEntry> entries = ci.getMemberCheckoutRecordForMember(memberId);
 
         if (entries.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Member does not have checkout records!", "Error", JOptionPane.ERROR_MESSAGE);
