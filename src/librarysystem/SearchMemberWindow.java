@@ -77,7 +77,7 @@ public class SearchMemberWindow extends JFrame implements LibWindow {
         memberInfoLabel = new JLabel("No member searched yet");
         memberInfoLabel.setFont(new Font("Arial", Font.BOLD, 11));
 
-        String[] columnNames = {"EntryID", "ISBN", "Issued Date", "Issued Duration"};
+        String[] columnNames = {"EntryID", "ISBN", "Issued Date", "Due Date"};
         memberTable = new JTable(new DefaultTableModel(columnNames, 0));
         tableScrollPane = new JScrollPane(memberTable);
 
@@ -121,7 +121,7 @@ public class SearchMemberWindow extends JFrame implements LibWindow {
         }
 
         LibraryMember memberObject = member.get();
-        String[] columnNames = {"EntryID", "ISBN", "Issued Date", "Issued Duration"};
+        String[] columnNames = {"EntryID", "ISBN", "Issued Date", "Due Date"};
 
         Object[][] data = new Object[entries.size()][4];
 
@@ -130,7 +130,7 @@ public class SearchMemberWindow extends JFrame implements LibWindow {
             data[i][0] = entry.getId();
             data[i][1] = entry.getBookCopy().getBook().getIsbn();
             data[i][2] = entry.getIssuedDate();
-            data[i][3] = entry.getIssuedDuration();
+            data[i][3] = entry.getDueDate();
         }
 
         memberTable.setModel(new DefaultTableModel(data, columnNames));
